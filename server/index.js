@@ -51,7 +51,7 @@ app.get("/enterRoom", (req, res) => {
     return res.json({ code: 0, message: "加入成功" });
   }
 
-  const room = createRoom(query.id);
+  const room = createRoom(query.id, query.name);
   rooms[query.id] = room;
 
   res.json({ code: 0, message: "创建成功" });
@@ -81,10 +81,11 @@ app.get("/roomInfo", (req, res) => {
  * @param {*} id
  * @returns
  */
-function createRoom(id) {
+function createRoom(id, name) {
   const room = io.of(`/${id}`);
   // 房间内的数据
   store[id] = {
+    name,
     users: {},
     docValue: "",
     socketUserMap: {}, // socketId: userId
@@ -115,7 +116,7 @@ function createRoom(id) {
     socket.on("enter", (user) => {
       const { users, docValue, socketUserMap } = store[roomId];
       if (!users[user.id]) {
-        users[user.id] = {...user, color: ''};
+        users[user.id] = { ...user, color: "" };
       }
       socketUserMap[socket.id] = user.id;
       room.emit("enter", { users: Object.values(users), [user.id]: docValue });

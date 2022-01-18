@@ -1,0 +1,7 @@
+.card-list .ant-card-body{
+  display: flex;
+}
+
+.card-list .ant-card{
+  margin: 15px;
+}
